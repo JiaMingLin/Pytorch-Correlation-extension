@@ -7,6 +7,18 @@ project_root = 'Correlation_Module'
 
 source_files = ['correlation.cpp', 'correlation_sampler.cpp']
 
+cxx_args = ['-std=c++14', '-fopenmp']
+nvcc_args = [
+    '-gencode', 'arch=compute_50,code=sm_50',
+    '-gencode', 'arch=compute_52,code=sm_52',
+    '-gencode', 'arch=compute_60,code=sm_60',
+    '-gencode', 'arch=compute_61,code=sm_61',
+    '-gencode', 'arch=compute_70,code=sm_70',
+    '-gencode', 'arch=compute_70,code=compute_70',
+    '-gencode', 'arch=compute_75,code=compute_75',
+    '-gencode', 'arch=compute_75,code=sm_75'
+]
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
@@ -36,7 +48,7 @@ def launch_setup():
             Extension('spatial_correlation_sampler_backend',
                       sources,
                       define_macros=macro,
-                      extra_compile_args={'cxx': ['-fopenmp'], 'nvcc':[]},
+                      extra_compile_args={'cxx': ['-fopenmp'], 'nvcc':nvcc_args},
                       extra_link_args=['-lgomp'])
         ],
         package_dir={'': project_root},
